@@ -8,6 +8,17 @@ from .serializers import RecipeSerializer
 
 # Create your views here.
 
+# Sign up page view
+def signup_page(request):
+    return render(request, "signup.html")
+
+
+# Log in page view
+def login_page(request):
+    return render(request, "login.html")
+
+
+
 @api_view(['GET', 'POST'])
 def recipe_list(request):
     if request.method == 'GET':
@@ -31,3 +42,4 @@ def recipe_detail(request, id):
 
     serializer = RecipeSerializer(recipe)
     return Response(serializer.data)
+
