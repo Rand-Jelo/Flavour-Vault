@@ -8,6 +8,10 @@ from .serializers import RecipeSerializer
 
 # Create your views here.
 
+# Homepage view
+def home_page(request):
+    return render(request, "home.html")
+
 # Sign up page view
 def signup_page(request):
     return render(request, "signup.html")

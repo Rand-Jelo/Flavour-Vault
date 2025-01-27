@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import permission_classes
+
+
 # User Signup
 @api_view(['POST'])
 def signup(request):
@@ -39,3 +43,24 @@ def login(request):
             'access': str(refresh.access_token),
         })
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticatedOrReadOnly])  # Viewing is public, editing requires login
+def recipe_detail(request, id):
+    try:
+        recipe = Recipe.objects.get(pk=id)
+    except Recipe.DoesNotExist:
+        return Response({'error': 'Recipe not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':  # Public Access
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data)
+
+    elif request.method in ['PUT', 'DELETE']: 
+        serializer = RecipeSerializer(recipe, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

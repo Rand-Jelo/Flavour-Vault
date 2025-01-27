@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - FlavourVault</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to FlavourVault</h1>
+        <p>Discover and share amazing recipes!</p>
+
+        <nav>
+            <a href="/signup/">Signup</a> |
+            <a href="/login/">Login</a> |
+            <a href="/recipes/">View Recipes</a>
+        </nav>
+
+        <h2>Featured Recipes</h2>
+        <ul id="recipeList"></ul>
+    </div>
+
+    <script>
+        async function fetchRecipes() {
+            const response = await fetch('/api/recipes/');
+            const recipes = await response.json();
+            const recipeList = document.getElementById('recipeList');
+
+            if (recipes.length === 0) {
+                recipeList.innerHTML = "<p>No recipes found. Add some!</p>";
+            } else {
+                recipes.forEach(recipe => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${recipe.title}</strong> - ${recipe.description}`;
+                    recipeList.appendChild(li);
+                });
+            }
+        }
+
+        fetchRecipes();
+    </script>
+</body>
+</html>

@@ -32,6 +32,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['8000-randjelo-flavourvault-60crf5myf7p.ws.codeinstitute-ide.net']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://8000-randjelo-flavourvault-60crf5myf7p.ws.codeinstitute-ide.net'
+]
+
 
 # Application definition
 
