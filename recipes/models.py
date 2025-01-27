@@ -45,3 +45,16 @@ class RecipeIngredient(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.ingredient.name} for {self.recipe.title}"
+
+
+# Model for user reviews on recipes
+class Review(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(1,1), (2,2), (3,3), (4,4), (5,5)])
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.recipe.title} ({self.rating})"
+    
