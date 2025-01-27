@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import dj_database_url
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'recipes',
-    'restframework',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -75,13 +78,17 @@ WSGI_APPLICATION = 'flavourvault.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
+# Code Institute Posrge url
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('postgresql://neondb_owner:npg_pR8ITcvAY5mJ@ep-bitter-scene-a2f9qcy3.eu-central-1.aws.neon.tech/tidal_whiff_remix_275955', 'sqlite:///db.sqlite3'))
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
