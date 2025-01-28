@@ -29,27 +29,7 @@
         <p>{{ recipe.instructions }}</p>
         <a href="{% url 'recipes_page' %}">Back to Recipes</a>
     </div>
-
-    <script>
-        async function fetchRecipe() {
-            const recipeId = window.location.pathname.split('/')[2]; // Extract recipe ID from URL
-            const response = await fetch(`/api/recipes/${recipeId}/`);
-            const recipe = await response.json();
-
-            document.getElementById('recipeTitle').innerText = recipe.title;
-            document.getElementById('recipeDescription').innerText = recipe.description;
-            document.getElementById('recipeInstructions').innerText = recipe.instructions;
-
-            const ingredientList = document.getElementById('ingredientList');
-            recipe.ingredients.forEach(ingredient => {
-                const li = document.createElement('li');
-                li.innerText = `${ingredient.quantity} of ${ingredient.ingredient.name}`;
-                ingredientList.appendChild(li);
-            });
-        }
-
-        fetchRecipe();
-    </script>
+    <script src="{% static 'scripts.js' %}"></script>
 </body>
 
 </html>
