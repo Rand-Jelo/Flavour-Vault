@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>{{ recipe.title }}</h1>
+        {% if recipe.image %}
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="max-width: 300px;">
+        {% else %}
+        <p>No image available</p>
+        {% endif %}
+        <h3>Ingredients:</h3>
+        <ul>
+            {% for recipe_ingredient in recipe.ingredients.all %}
+            <li>{{ recipe_ingredient.quantity }} {{ recipe_ingredient.ingredient.name }}</li>
+            {% empty %}
+            <p>No ingredients available</p>
+            {% endfor %}
+        </ul>
+        <h3>Instructions:</h3>
+        <p>{{ recipe.instructions }}</p>
+        <a href="{% url 'recipes_page' %}">Back to Recipes</a>
+    </div>
+
+    <script>
+        async function fetchRecipe() {
+            const recipeId = window.location.pathname.split('/')[2]; // Extract recipe ID from URL
+            const response = await fetch(`/api/recipes/${recipeId}/`);
+            const recipe = await response.json();
+
+            document.getElementById('recipeTitle').innerText = recipe.title;
+            document.getElementById('recipeDescription').innerText = recipe.description;
+            document.getElementById('recipeInstructions').innerText = recipe.instructions;
+
+            const ingredientList = document.getElementById('ingredientList');
+            recipe.ingredients.forEach(ingredient => {
+                const li = document.createElement('li');
+                li.innerText = `${ingredient.quantity} of ${ingredient.ingredient.name}`;
+                ingredientList.appendChild(li);
+            });
+        }
+
+        fetchRecipe();
+    </script>
+</body>
+
+</html>

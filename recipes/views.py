@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,6 +21,17 @@ def signup_page(request):
 def login_page(request):
     return render(request, "login.html")
 
+
+# Recipe Page
+def recipes_page(request):
+    recipes = Recipe.objects.all()
+    return render(request, "recipes.html", {"recipes": recipes})
+
+
+# Recipe Detail Page
+def recipe_detail_page(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
+    return render(request, "recipe_detail.html", {"recipe": recipe})
 
 
 @api_view(['GET', 'POST'])

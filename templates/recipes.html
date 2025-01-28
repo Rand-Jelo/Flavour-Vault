@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>All Recipes</h1>
+        <nav>
+            <a href="/">Home</a> |
+            <a href="/signup/">Signup</a> |
+            <a href="/login/">Login</a>
+        </nav>
+
+        <ul id="recipeList"></ul>
+    </div>
+
+    {% for recipe in recipes %}
+    <div class="recipe-card">
+        <h2>{{ recipe.title }}</h2>
+        <p>{{ recipe.description }}</p>
+        <a href="{% url 'recipe_detail_page' recipe.id %}">View Recipe</a>
+    </div>
+{% empty %}
+    <p>No recipes available.</p>
+{% endfor %}
+
+    <script>
+        async function fetchRecipes() {
+            const response = await fetch('/api/recipes/');
+            const recipes = await response.json();
+            const recipeList = document.getElementById('recipeList');
+
+            if (recipes.length === 0) {
+                recipeList.innerHTML = "<p>No recipes found. Add some!</p>";
+            } else {
+                recipes.forEach(recipe => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="/recipes/${recipe.id}/"><strong>${recipe.title}</strong></a> - ${recipe.description}`;
+                    recipeList.appendChild(li);
+                });
+            }
+        }
+
+        fetchRecipes();
+    </script>
+</body>
+</html>

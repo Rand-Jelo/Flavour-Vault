@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import recipe_list, recipe_detail, signup_page, login_page, home_page
+from .views import recipe_list, recipe_detail, signup_page, login_page, home_page, recipes_page, recipe_detail_page
 
 from .auth_views import signup, login
 
@@ -8,6 +8,8 @@ urlpatterns = [
     path('', home_page, name='home_page'),
     path('signup/', signup_page, name='signup_page'),
     path('login/', login_page, name='login_page'),
+    path('recipes/', recipes_page, name='recipes_page'),
+    path('recipes/<int:id>/', recipe_detail_page, name='recipe_detail_page'),
 
     # API Endpoints (Authentication)
     path('api/auth/signup/', signup, name='signup'),
