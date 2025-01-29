@@ -1,17 +1,37 @@
 // Home Page 
 async function fetchRecipes() {
-    const response = await fetch('/api/recipes/');
-    const recipes = await response.json();
-    const recipeList = document.getElementById('recipeList');
+    try {
+        const response = await fetch('/api/recipes/');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-    if (recipes.length === 0) {
-        recipeList.innerHTML = "<p>No recipes found. Add some!</p>";
-    } else {
-        recipes.forEach(recipe => {
-            const li = document.createElement('li');
-            li.innerHTML = `<strong>${recipe.title}</strong> - ${recipe.description}`;
-            recipeList.appendChild(li);
-        });
+        const recipes = await response.json();
+        console.log("Fetched recipes:", recipes);
+
+        const recipeList = document.getElementById('recipeList');
+        recipeList.innerHTML = "";  // Clear existing content
+
+        if (recipes.length === 0) {
+            recipeList.innerHTML = "<p class='text-center'>No recipes found. Add some!</p>";
+        } else {
+            recipes.forEach(recipe => {
+                const recipeCard = `
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <img src="${recipe.image || 'https://via.placeholder.com/150'}" class="card-img-top" alt="${recipe.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${recipe.title}</h5>
+                                <p class="card-text">${recipe.description}</p>
+                                <a href="/recipes/${recipe.id}/" class="btn btn-primary">View Recipe</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                recipeList.innerHTML += recipeCard;
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching recipes:", error);
+        document.getElementById('recipeList').innerHTML = `<p class='text-danger text-center'>Error loading recipes. ${error.message}</p>`;
     }
 }
 
