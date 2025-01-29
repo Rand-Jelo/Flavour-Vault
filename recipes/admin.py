@@ -4,7 +4,7 @@ from .models import Recipe, Category, Ingredient, RecipeIngredient, Review, Favo
 # Register your models here.
 
 
-class RecipeIngredientInline(admin.TabularInline):  # or admin.StackedInline
+class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1  # Allows adding at least one ingredient initially
 

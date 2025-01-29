@@ -1,39 +1,35 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Recipe
-from .serializers import RecipeSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import Recipe, Review
+from .serializers import RecipeSerializer, ReviewSerializer
 
-
-# Create your views here.
-
-# Homepage view
+# HOME PAGE VIEW
 def home_page(request):
     return render(request, "home.html")
 
-# Sign up page view
+# SIGNUP PAGE VIEW
 def signup_page(request):
     return render(request, "signup.html")
 
-
-# Log in page view
+# LOGIN PAGE VIEW
 def login_page(request):
     return render(request, "login.html")
 
-
-# Recipe Page
+# RECIPE PAGE VIEW (List all recipes)
 def recipes_page(request):
     recipes = Recipe.objects.all()
     return render(request, "recipes.html", {"recipes": recipes})
 
-
-# Recipe Detail Page
+# RECIPE DETAIL PAGE VIEW
 def recipe_detail_page(request, id):
     recipe = get_object_or_404(Recipe, id=id)
-    return render(request, "recipe_detail.html", {"recipe": recipe})
+    reviews = recipe.reviews.all()
+    return render(request, "recipe_detail.html", {"recipe": recipe, "reviews": reviews})
 
-
+# GET & POST RECIPES
 @api_view(['GET', 'POST'])
 def recipe_list(request):
     if request.method == 'GET':
@@ -48,13 +44,32 @@ def recipe_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# GET A SINGLE RECIPE
 @api_view(['GET'])
 def recipe_detail(request, id):
-    try:
-        recipe = Recipe.objects.get(pk=id)
-    except Recipe.DoesNotExist:
-        return Response({'error': 'Recipe not found'}, status=status.HTTP_404_NOT_FOUND)
-
+    recipe = get_object_or_404(Recipe, id=id)
     serializer = RecipeSerializer(recipe)
     return Response(serializer.data)
 
+# ADD A REVIEW (Requires Authentication)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def add_review(request, recipe_id):
+    """Handles adding a review to a recipe"""
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    serializer = ReviewSerializer(data=request.data, context={'request': request, 'recipe_id': recipe_id})
+    if serializer.is_valid():
+        serializer.save(user=request.user, recipe=recipe)  
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# GET REVIEWS FOR A SPECIFIC RECIPE
+@api_view(['GET'])
+def get_reviews(request, recipe_id):
+    """Retrieve all reviews for a specific recipe"""
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    reviews = recipe.reviews.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
