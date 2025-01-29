@@ -1,9 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Recipe, RecipeIngredient, Review
+from .forms import RecipeForm, RecipeIngredientForm
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .models import Recipe, Review
 from .serializers import RecipeSerializer, ReviewSerializer
 
 # HOME PAGE VIEW
@@ -28,6 +30,10 @@ def recipe_detail_page(request, id):
     recipe = get_object_or_404(Recipe, id=id)
     reviews = recipe.reviews.all()
     return render(request, "recipe_detail.html", {"recipe": recipe, "reviews": reviews})
+
+# ACCOUNT PAGE VIEW
+def account_page(request):
+    return render(request, "account.html", {"user": request.user})
 
 # GET & POST RECIPES
 @api_view(['GET', 'POST'])
@@ -73,3 +79,67 @@ def get_reviews(request, recipe_id):
     reviews = recipe.reviews.all()
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
+
+
+# ACCOUNT PAGE VIEW (For Logged-in User)
+@login_required  # Ensures only logged-in users can access their account page
+def account_page(request):
+    user = request.user  # Get the logged-in user
+    
+    user_recipes = Recipe.objects.filter(author=user)  # Get recipes created by the user
+    user_reviews = Review.objects.filter(user=user)  # Get reviews written by the user
+    
+    context = {
+        "user": user,
+        "user_recipes": user_recipes,
+        "user_reviews": user_reviews,
+    }
+    return render(request, "account.html", context)
+
+
+# Delete recipe
+@login_required
+def delete_recipe(request, recipe_id):
+    """Allows users to delete their own recipes"""
+    recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)  # Ensure user owns the recipe
+    if request.method == 'POST':
+        recipe.delete()  # Delete the recipe itself
+        return redirect('account_page')  # Redirect to the account page after deleting
+
+    return render(request, 'confirm_delete.html', {'recipe': recipe})
+
+
+# Create Recipe
+@login_required
+def create_recipe(request):
+    """Allows users to create a new recipe."""
+    if request.method == 'POST':
+        # Create the recipe form
+        recipe_form = RecipeForm(request.POST, request.FILES)
+        
+        if recipe_form.is_valid():
+            recipe = recipe_form.save(commit=False)  # Don't save yet, we need to associate the user
+            recipe.author = request.user  # Associate the user who created the recipe
+            recipe.save()  # Save the recipe
+
+            # Handle ingredients form if there are ingredients selected
+            ingredients = request.POST.getlist('ingredients')  # Get the selected ingredients
+            quantities = request.POST.getlist('quantities')  # Get the quantities of the ingredients
+
+            for ingredient, quantity in zip(ingredients, quantities):
+                RecipeIngredient.objects.create(
+                    recipe=recipe,
+                    ingredient_id=ingredient,
+                    quantity=quantity
+                )
+
+            return redirect('recipes_page')  # Redirect to the recipes page after creating a new recipe
+
+    else:
+        recipe_form = RecipeForm()
+        ingredient_form = RecipeIngredientForm()
+
+    return render(request, "create_recipe.html", {
+        "recipe_form": recipe_form,
+        "ingredient_form": ingredient_form
+    })
