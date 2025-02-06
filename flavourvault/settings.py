@@ -46,10 +46,31 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recipes',
     'rest_framework',
-    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'recipes',
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', 
+    'allauth.account.auth_backends.AuthenticationBackend',  
+]
+
+ACCOUNT_LOGIN_METHODS = {"username"}
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True 
+ACCOUNT_EMAIL_VERIFICATION = "none"  
+
+LOGIN_REDIRECT_URL = "/"  
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'flavourvault.urls'
@@ -95,7 +117,10 @@ WSGI_APPLICATION = 'flavourvault.wsgi.application'
 
 # Code Institute Posrge url
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('postgresql://neondb_owner:npg_pR8ITcvAY5mJ@ep-bitter-scene-a2f9qcy3.eu-central-1.aws.neon.tech/tidal_whiff_remix_275955', 'sqlite:///db.sqlite3'))
+    'default': dj_database_url.config(
+        default="postgresql://neondb_owner:npg_pR8ITcvAY5mJ@ep-bitter-scene-a2f9qcy3.eu-central-1.aws.neon.tech/ruin_ride_write_609098?sslmode=require",
+        conn_max_age=600
+    )
 }
 
 # Password validation
@@ -129,16 +154,14 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Authentication for users
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Tokens last 1 day
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', 
+    ),
 }
 
 ROOT_URLCONF = 'flavourvault.urls'
@@ -155,6 +178,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media Files (Uploaded Images)
 MEDIA_URL = '/media/'  # URL used in templates to access media files

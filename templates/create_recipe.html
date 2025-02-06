@@ -12,58 +12,85 @@
     <div class="container mt-5">
         <h1>Create a New Recipe</h1>
 
-        <form method="post" enctype="multipart/form-data">
+        <!-- Display Form Errors -->
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Oops! There were some errors:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field|title }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Recipe Form -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'create_recipe' %}">
             {% csrf_token %}
 
-            <!-- Recipe Form Fields -->
+            <!-- Recipe Title -->
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 {{ recipe_form.title }}
             </div>
 
+            <!-- Recipe Description -->
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 {{ recipe_form.description }}
             </div>
 
+            <!-- Instructions -->
             <div class="mb-3">
                 <label for="instructions" class="form-label">Instructions</label>
                 {{ recipe_form.instructions }}
             </div>
 
+            <!-- Recipe Image -->
             <div class="mb-3">
                 <label for="image" class="form-label">Recipe Image</label>
                 {{ recipe_form.image }}
             </div>
 
+            <!-- Category -->
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
                 {{ recipe_form.category }}
             </div>
 
+            <!-- Difficulty -->
             <div class="mb-3">
                 <label for="difficulty" class="form-label">Difficulty</label>
-                {{ recipe_form.difficulty }}
-            </div>
-
-            <div class="mb-3">
-                <label for="ingredients" class="form-label">Ingredients</label>
-                <select multiple class="form-control" id="ingredients" name="ingredients">
-                    {% for ingredient in ingredients %}
-                        <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
-                    {% endfor %}
+                <select class="form-control" id="difficulty" name="difficulty">
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
                 </select>
             </div>
 
+            <!-- Ingredients with Quantities -->
             <div class="mb-3">
-                <label for="quantities" class="form-label">Quantities</label>
-                <input type="text" class="form-control" id="quantities" name="quantities" placeholder="Enter quantities for selected ingredients" required>
+                <label for="ingredients" class="form-label">Ingredients & Quantities</label>
+                <div id="ingredient-list">
+                    {% for ingredient in ingredients %}
+                    <div class="d-flex align-items-center mb-2">
+                        <input type="checkbox" id="ingredient_{{ ingredient.id }}" name="ingredients" value="{{ ingredient.id }}">
+                        <label for="ingredient_{{ ingredient.id }}" class="ms-2">{{ ingredient.name }}</label>
+                        <input type="text" class="form-control ms-2" name="quantities_{{ ingredient.id }}" placeholder="Quantity (e.g., 2 cups)">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
+            <!-- Form Buttons -->
             <button type="submit" class="btn btn-success">Create Recipe</button>
+            <a href="{% url 'recipes_page' %}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'scripts.js' %}"></script>
 </body>
 </html>

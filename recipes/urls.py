@@ -1,30 +1,27 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
-    recipe_list, recipe_detail, signup_page, login_page, 
-    home_page, recipes_page, recipe_detail_page, add_review, get_reviews, account_page, delete_recipe, create_recipe
+    home_page, recipes_page, recipe_detail_page, account_page, 
+    create_recipe, delete_recipe  # Added delete_recipe import
 )
-from .auth_views import signup, login
+from .auth_views import user_profile, delete_user
+
+app_name = "recipes"
 
 urlpatterns = [
     # Frontend Pages
     path('', home_page, name='home_page'),
-    path('signup/', signup_page, name='signup_page'),
-    path('login/', login_page, name='login_page'),
     path('recipes/', recipes_page, name='recipes_page'),
-    path('recipes/<int:id>/', recipe_detail_page, name='recipe_detail_page'),
+    path('recipes/<int:recipe_id>/', recipe_detail_page, name='recipe_detail_page'),
     path('account/', account_page, name='account_page'),
+    path('recipes/create/', create_recipe, name='create_recipe'),  
 
-    # API Endpoints (Authentication)
-    path('api/auth/signup/', signup, name='signup'),
-    path('api/auth/login/', login, name='login'),
+    # Recipe Deletion Endpoint (Fixing missing delete route)
+    path('recipes/delete/<int:recipe_id>/', delete_recipe, name='delete_recipe'),
 
-    # API Endpoints (Recipes & Reviews)
-    path('api/recipes/', recipe_list, name='recipe_list'),
-    path('api/recipes/<int:id>/', recipe_detail, name='recipe_detail'),
-    path('api/recipes/<int:recipe_id>/add_review/', add_review, name='add_review'),
-    path('api/recipes/<int:recipe_id>/get_reviews/', get_reviews, name='get_reviews'),
+    # User Profile Endpoints
+    path('user/profile/', user_profile, name='user-profile'),
+    path('user/delete/', delete_user, name='delete-user'),
 
-    # Recipe Actions
-    path('recipes/<int:recipe_id>/delete/', delete_recipe, name='delete_recipe'),
-    path('recipes/create/', create_recipe, name='create_recipe'),
+    # Include API Routes
+    path('api/', include('recipes.api_urls', namespace='api')),
 ]

@@ -1,25 +1,34 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account - FlavourVault</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 
-    <!-- Navbar (you can keep this if needed) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">FlavourVault</a>
+            <a class="navbar-brand" href="{% url 'home' %}">FlavourVault</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'recipes_page' %}">Recipes</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'recipes:recipes_page' %}">View Recipes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'recipes:recipes_page' %}">View Recipes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -31,7 +40,7 @@
         <p>Manage your recipes and reviews here.</p>
 
         <!-- Button to create a new recipe -->
-        <a href="{% url 'create_recipe' %}" class="btn btn-primary mb-4">Create a New Recipe</a>
+        <a href="{% url 'recipes:create_recipe' %}" class="btn btn-primary mb-4">Create a New Recipe</a>
 
         <!-- User Recipes -->
         <h3>Your Recipes</h3>
@@ -39,35 +48,76 @@
             {% for recipe in user_recipes %}
             <div class="col-md-4 mb-4">
                 <div class="card">
+                    {% if recipe.image %}
                     <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default_recipe.jpg' %}" class="card-img-top" alt="Default Image">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ recipe.title }}</h5>
                         <p class="card-text">{{ recipe.description }}</p>
-                        <a href="{% url 'recipe_detail_page' recipe.id %}" class="btn btn-primary">View Recipe</a>
+                        <a href="{% url 'recipes:recipe_detail_page' recipe.id %}" class="btn btn-primary">View Recipe</a>
+
                         <!-- Delete Button (opens a confirmation modal) -->
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ recipe.id }}">
-                        Delete
-                    </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ recipe.id }}">
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteModal{{ recipe.id }}" tabindex="-1"
+                aria-labelledby="deleteModalLabel{{ recipe.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel{{ recipe.id }}">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong>{{ recipe.title }}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form method="post" action="{% url 'recipes:delete_recipe' recipe.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% empty %}
             <p>You don't have any saved recipes yet. Click the button above to create one!</p>
             {% endfor %}
         </div>
 
-        <!-- User Reviews (optional) -->
+        <!-- User Reviews -->
         <h3>Your Reviews</h3>
-        <ul>
+        <div class="row">
             {% for review in user_reviews %}
-            <li>{{ review.recipe.title }}: {{ review.rating }} stars</li>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review.recipe.title }}</h5>
+                        <p class="card-text">Rating: ⭐{{ review.rating }}</p>
+                        <p class="card-text">{{ review.content }}</p>
+                        <a href="{% url 'recipe_detail_page' review.recipe.id %}" class="btn btn-primary">View
+                            Recipe</a>
+                    </div>
+                </div>
+            </div>
             {% empty %}
             <p>You haven't reviewed any recipes yet.</p>
             {% endfor %}
-        </ul>
-    </div>
+        </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{% static 'scripts.js' %}"></script>
 </body>
+
 </html>

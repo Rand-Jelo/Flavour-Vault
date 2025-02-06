@@ -35,8 +35,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Prevent duplicate reviews"""
-        request = self.context['request']
-        recipe_id = self.context['recipe_id']
+        request = self.context.get('request', None)
+        recipe_id = self.context.get('recipe_id', None)
+
+        if not request or not recipe_id:
+            raise serializers.ValidationError("Request context or recipe ID is missing.")
+
         user = request.user
 
         # Check if user has already reviewed this recipe
@@ -51,11 +55,28 @@ class ReviewSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipes with nested ingredients & reviews"""
     ingredients = RecipeIngredientSerializer(many=True, read_only=True)
+    ingredient_entries = serializers.ListField(write_only=True, required=False)  # Allow writing ingredients
     reviews = ReviewSerializer(many=True, read_only=True)
+    author = serializers.ReadOnlyField(source='author.username')  # Include recipe author
 
     class Meta:
         model = Recipe
         fields = [
             'id', 'title', 'description', 'instructions', 'image', 
-            'category', 'difficulty', 'created_at', 'ingredients', 'reviews'
+            'category', 'difficulty', 'created_at', 'author',
+            'ingredients', 'ingredient_entries', 'reviews'
         ]
+
+    def create(self, validated_data):
+        """Create a recipe with ingredients"""
+        ingredient_entries = validated_data.pop('ingredient_entries', [])
+
+        # Create the recipe
+        recipe = Recipe.objects.create(**validated_data)
+
+        # Add ingredients
+        for entry in ingredient_entries:
+            ingredient = Ingredient.objects.get_or_create(name=entry['name'])[0]
+            RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=entry['quantity'])
+
+        return recipe

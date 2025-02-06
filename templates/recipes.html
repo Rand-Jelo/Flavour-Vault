@@ -9,6 +9,14 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Hover Effect -->
+    <style>
+        .card:hover {
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -21,10 +29,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'signup_page' %}">Signup</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login_page' %}">Login</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'recipes:account_page' %}">Account</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
+                    {% endif %}
                 </ul>
+            </div>
             </div>
         </div>
     </nav>
@@ -37,14 +52,14 @@
             <div class="col-md-4">
                 <div class="card shadow-sm mb-4">
                     {% if recipe.image %}
-                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}">
+                        <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}">
                     {% else %}
-                    <img src="{% static 'default_recipe.jpg' %}" class="card-img-top" alt="No Image">
+                        <img src="{% static 'images/default_recipe.jpg' %}" class="card-img-top" alt="No Image Available">
                     {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <h5 class="card-title">{{ recipe.title|truncatechars:40 }}</h5>
                         <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
-                        <a href="{% url 'recipe_detail_page' recipe.id %}" class="btn btn-primary">View Recipe</a>
+                        <a href="{% url 'recipes:recipe_detail_page' recipe.id %}" class="btn btn-primary">View Recipe</a>
                     </div>
                 </div>
             </div>
@@ -54,7 +69,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS (for interactive components) -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'scripts.js' %}"></script>
 </body>

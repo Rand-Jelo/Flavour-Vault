@@ -1,66 +1,39 @@
-from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
 
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.decorators import permission_classes
+# User Profile View (Retrieve and Update User Info)
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    """Allows authenticated users to retrieve or update their profile."""
+    user = request.user
 
-
-# User Signup
-@api_view(['POST'])
-def signup(request):
-    username = request.data.get('username')
-    email = request.data.get('email')
-    password = request.data.get('password')
-
-    if not username or not email or not password:
-        return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
-
-    if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
-
-    user = User.objects.create_user(username=username, email=email, password=password)
-    user.save()
-    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
-
-# User Login
-@api_view(['POST'])
-def login(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-
-    if not username or not password:
-        return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
-
-    user = User.objects.filter(username=username).first()
-    if user and user.check_password(password):
-        refresh = RefreshToken.for_user(user)
+    if request.method == 'GET':
         return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'date_joined': user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
         })
-    return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+    elif request.method == 'PUT':
+        user.username = request.data.get('username', user.username)
+        user.email = request.data.get('email', user.email)
+        
+        if 'password' in request.data:
+            user.set_password(request.data['password'])
 
+        user.save()
+        return Response({'message': 'Profile updated successfully'})
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticatedOrReadOnly])  # Viewing is public, editing requires login
-def recipe_detail(request, id):
-    try:
-        recipe = Recipe.objects.get(pk=id)
-    except Recipe.DoesNotExist:
-        return Response({'error': 'Recipe not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':  # Public Access
-        serializer = RecipeSerializer(recipe)
-        return Response(serializer.data)
-
-    elif request.method in ['PUT', 'DELETE']: 
-        serializer = RecipeSerializer(recipe, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# Delete User Account
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_user(request):
+    """Allows authenticated users to delete their own account."""
+    user = request.user
+    user.delete()
+    return Response({'message': 'User account deleted successfully'}, status=status.HTTP_204_NO_CONTENT)

@@ -10,3 +10,6 @@ class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
         fields = ['ingredient', 'quantity']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'step': '0.01', 'placeholder': 'Enter quantity in grams'})
+        }
