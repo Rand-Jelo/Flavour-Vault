@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+from env import *  
 import dj_database_url
 import os
+import dj_database_url
 
 from datetime import timedelta
 
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8co)=a7!#ffrho-9rn0lqm@*9na5z_yow1g4rbsa*akal3p^%6'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,6 +56,12 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'recipes',
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -117,10 +124,7 @@ WSGI_APPLICATION = 'flavourvault.wsgi.application'
 
 # Code Institute Posrge url
 DATABASES = {
-    'default': dj_database_url.config(
-        default="postgresql://neondb_owner:npg_pR8ITcvAY5mJ@ep-bitter-scene-a2f9qcy3.eu-central-1.aws.neon.tech/ruin_ride_write_609098?sslmode=require",
-        conn_max_age=600
-    )
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 
 # Password validation
@@ -182,9 +186,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media Files (Uploaded Images)
-MEDIA_URL = '/media/'  # URL used in templates to access media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where uploaded media files are stored
-
+MEDIA_URL = 'https://res.cloudinary.com/{}/image/upload/'.format(os.getenv('CLOUDINARY_CLOUD_NAME'))
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

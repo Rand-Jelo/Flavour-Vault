@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from cloudinary.models import CloudinaryField
+
 
 User = get_user_model()
 
@@ -10,7 +12,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     instructions = models.TextField()
-    image = models.ImageField(upload_to='recipe_images/', null=True, blank=True)
+    image = CloudinaryField('image', blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     models.CharField(max_length=100)
     difficulty = models.CharField(
