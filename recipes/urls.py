@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import (
     home_page, recipes_page, recipe_detail_page, account_page, 
-    create_recipe, delete_recipe  # Added delete_recipe import
+    create_recipe, delete_recipe, edit_recipe
 )
 from .auth_views import user_profile, delete_user
 
@@ -13,7 +13,8 @@ urlpatterns = [
     path('recipes/', recipes_page, name='recipes_page'),
     path('recipes/<int:recipe_id>/', recipe_detail_page, name='recipe_detail_page'),
     path('account/', account_page, name='account_page'),
-    path('recipes/create/', create_recipe, name='create_recipe'),  
+    path('recipes/create/', create_recipe, name='create_recipe'),
+    path('recipes/edit/<int:recipe_id>/', edit_recipe, name='edit_recipe'),  
 
     # Recipe Deletion Endpoint (Fixing missing delete route)
     path('recipes/delete/<int:recipe_id>/', delete_recipe, name='delete_recipe'),

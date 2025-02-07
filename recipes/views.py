@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Recipe, RecipeIngredient, Review
 from .forms import RecipeForm, RecipeIngredientForm
 from .serializers import RecipeSerializer, ReviewSerializer
+import json
 
 # HOME PAGE VIEW
 def home_page(request):
@@ -32,7 +33,7 @@ def recipe_detail_page(request, recipe_id):
         "reviews": reviews
     })
 
-# ACCOUNT PAGE VIEW (Fixed)
+# ACCOUNT PAGE VIEW
 @login_required
 def account_page(request):
     """Display user's recipes and reviews."""
@@ -45,7 +46,7 @@ def account_page(request):
         "user_reviews": user_reviews
     })
 
-# GET & POST RECIPES
+# GET & POST RECIPES (API)
 @api_view(['GET', 'POST'])
 def recipe_list(request):
     if request.method == 'GET':
@@ -60,14 +61,14 @@ def recipe_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# GET A SINGLE RECIPE
+# GET A SINGLE RECIPE (API)
 @api_view(['GET'])
 def recipe_detail(request, id):
     recipe = get_object_or_404(Recipe, id=id)
     serializer = RecipeSerializer(recipe)
     return Response(serializer.data)
 
-# ADD A REVIEW (Requires Authentication)
+# ADD A REVIEW (API - Requires Authentication)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
 def add_review(request, recipe_id):
@@ -81,7 +82,7 @@ def add_review(request, recipe_id):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# GET REVIEWS FOR A SPECIFIC RECIPE
+# GET REVIEWS FOR A SPECIFIC RECIPE (API)
 @api_view(['GET'])
 def get_reviews(request, recipe_id):
     """Retrieve all reviews for a specific recipe"""
@@ -90,13 +91,11 @@ def get_reviews(request, recipe_id):
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
 
-# CREATE RECIPE (API-Based)
+# CREATE RECIPE (Template-Based)
 @login_required
 def create_recipe(request):
     if request.method == "POST":
         recipe_form = RecipeForm(request.POST, request.FILES)
-
-        # Extract dynamically added ingredients manually
         ingredients_json = request.POST.get('ingredients_json')  # JSON string from hidden input
 
         if recipe_form.is_valid():
@@ -106,35 +105,100 @@ def create_recipe(request):
 
             # Process ingredient JSON data
             if ingredients_json:
-                import json
-                ingredients_data = json.loads(ingredients_json)
-
-                for ingredient in ingredients_data:
-                    RecipeIngredient.objects.create(
-                        recipe=recipe,
-                        ingredient=ingredient["name"],
-                        quantity=ingredient["quantity"],
-                        unit=ingredient["unit"]
-                    )
+                try:
+                    ingredients_data = json.loads(ingredients_json)
+                    for ingredient in ingredients_data:
+                        RecipeIngredient.objects.create(
+                            recipe=recipe,
+                            ingredient=ingredient["name"],
+                            quantity=ingredient["quantity"],
+                            unit=ingredient["unit"]
+                        )
+                except json.JSONDecodeError:
+                    messages.error(request, "Error processing ingredients. Please try again.")
 
             return redirect('recipes:recipe_detail_page', recipe_id=recipe.id)
 
     else:
         recipe_form = RecipeForm()
 
-    return render(request, "create_recipe.html", {
-        'recipe_form': recipe_form,
-    })
+    return render(request, "create_recipe.html", {'recipe_form': recipe_form})
 
-# DELETE RECIPE (API-Based)
+# DELETE RECIPE
 @api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_recipe(request, recipe_id):
-    """API to delete a recipe owned by the authenticated user."""
+    """Delete a recipe owned by the authenticated user."""
     recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)
     recipe.delete()
     
-    # Add success message
     messages.success(request, "Recipe deleted successfully!")
-    
     return redirect('recipes:account_page')
+
+# EDIT RECIPE (Template-Based)
+@login_required
+def edit_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+
+    if request.method == "POST":
+        # Get the form and process ingredients
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
+        ingredients_json = request.POST.get('ingredients_json')  # Get JSON data for ingredients
+
+        if form.is_valid():
+            form.save()
+
+            # Handling ingredient update or creation
+            if ingredients_json:
+                try:
+                    ingredients_data = json.loads(ingredients_json)
+
+                    # Update existing ingredients
+                    existing_ingredients = {ing.ingredient: ing for ing in RecipeIngredient.objects.filter(recipe=recipe)}
+                    updated_ingredient_names = set()
+
+                    for ingredient in ingredients_data:
+                        ingredient_name = ingredient["name"].strip()
+                        ingredient_quantity = ingredient["quantity"]
+                        ingredient_unit = ingredient["unit"].strip()
+
+                        if ingredient_name in existing_ingredients:
+                            # Update existing ingredient
+                            existing_ingredient = existing_ingredients[ingredient_name]
+                            existing_ingredient.quantity = ingredient_quantity
+                            existing_ingredient.unit = ingredient_unit
+                            existing_ingredient.save()
+                        else:
+                            # Create new ingredient
+                            RecipeIngredient.objects.create(
+                                recipe=recipe,
+                                ingredient=ingredient_name,
+                                quantity=ingredient_quantity,
+                                unit=ingredient_unit
+                            )
+
+                        updated_ingredient_names.add(ingredient_name)
+
+                    # Remove ingredients that are no longer in the updated list
+                    for ing_name in existing_ingredients.keys():
+                        if ing_name not in updated_ingredient_names:
+                            existing_ingredients[ing_name].delete()
+
+                except json.JSONDecodeError:
+                    messages.error(request, "Error processing ingredients. Please try again.")
+
+            # Success message and redirect
+            messages.success(request, "Recipe updated successfully!")
+            return redirect('recipes:recipe_detail_page', recipe_id=recipe.id)
+
+    else:
+        # Pre-fill the form with existing data
+        form = RecipeForm(instance=recipe)
+
+    # Render the edit recipe page with the form and ingredients
+    return render(request, "edit_recipe.html", {
+        "recipe": recipe,
+        "form": form,
+        "ingredients": ingredients
+    })
