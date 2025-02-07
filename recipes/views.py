@@ -23,8 +23,14 @@ def recipes_page(request):
 # RECIPE DETAIL PAGE VIEW
 def recipe_detail_page(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)  # Fetch linked ingredients
     reviews = recipe.reviews.all()
-    return render(request, "recipe_detail.html", {"recipe": recipe, "reviews": reviews})
+
+    return render(request, "recipe_detail.html", {
+        "recipe": recipe,
+        "ingredients": ingredients,
+        "reviews": reviews
+    })
 
 # ACCOUNT PAGE VIEW (Fixed)
 @login_required

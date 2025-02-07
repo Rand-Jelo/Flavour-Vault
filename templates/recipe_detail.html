@@ -23,13 +23,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'recipes:account_page' %}">Account</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'recipes:account_page' %}">Account</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -54,8 +54,7 @@
                 <ul class="list-group">
                     {% for recipe_ingredient in recipe.recipe_ingredients.all %}
                     <li class="list-group-item">
-                        {{ recipe_ingredient.quantity|floatformat:2 }} {{ recipe_ingredient.unit }} of {{
-                        recipe_ingredient.ingredient.name }}
+                        {{ recipe_ingredient.quantity|floatformat:2 }} {{ recipe_ingredient.unit }} of {{ recipe_ingredient.ingredient }}
                     </li>
                     {% empty %}
                     <li class="list-group-item">No ingredients available</li>
