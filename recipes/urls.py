@@ -1,28 +1,20 @@
-from django.urls import path, include
-from .views import (
-    home_page, recipes_page, recipe_detail_page, account_page, 
-    create_recipe, delete_recipe, edit_recipe
-)
-from .auth_views import user_profile, delete_user
+from django.urls import path
+from . import views
 
-app_name = "recipes"
+app_name = 'recipes'
 
 urlpatterns = [
-    # Frontend Pages
-    path('', home_page, name='home_page'),
-    path('recipes/', recipes_page, name='recipes_page'),
-    path('recipes/<int:recipe_id>/', recipe_detail_page, name='recipe_detail_page'),
-    path('account/', account_page, name='account_page'),
-    path('recipes/create/', create_recipe, name='create_recipe'),
-    path('recipes/edit/<int:recipe_id>/', edit_recipe, name='edit_recipe'),  
+    # Home page route
+    path('', views.home_page, name='home'),  # The home page is now handled here
 
-    # Recipe Deletion Endpoint (Fixing missing delete route)
-    path('recipes/delete/<int:recipe_id>/', delete_recipe, name='delete_recipe'),
+    # Other recipe-related routes
+    path('recipes/', views.recipes_page, name='recipes_page'),
+    path('recipes/<int:recipe_id>/', views.recipe_detail_page, name='recipe_detail_page'),
+    path('account/', views.account_page, name='account_page'),
+    path('recipes/create/', views.create_recipe, name='create_recipe'),
+    path('recipes/edit/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
+    path('recipes/delete/<int:recipe_id>/', views.delete_recipe, name='delete_recipe'),
 
-    # User Profile Endpoints
-    path('user/profile/', user_profile, name='user-profile'),
-    path('user/delete/', delete_user, name='delete-user'),
-
-    # Include API Routes
-    path('api/', include('recipes.api_urls', namespace='api')),
+    # Add Review route
+    path('recipes/<int:recipe_id>/add_review/', views.add_review, name='add_review'),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Recipe, RecipeIngredient
+from .models import Recipe, RecipeIngredient, Review
 
 class RecipeForm(forms.ModelForm):
     class Meta:
@@ -31,3 +31,10 @@ class RecipeIngredientForm(forms.ModelForm):
             }),
             'unit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., grams'})
         }
+
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'content']

@@ -70,7 +70,7 @@ def recipe_detail(request, id):
 
 # ADD A REVIEW (API - Requires Authentication)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([IsAuthenticated])
 def add_review(request, recipe_id):
     """Handles adding a review to a recipe"""
     recipe = get_object_or_404(Recipe, id=recipe_id)
@@ -78,9 +78,17 @@ def add_review(request, recipe_id):
     serializer = ReviewSerializer(data=request.data, context={'request': request, 'recipe_id': recipe_id})
     if serializer.is_valid():
         serializer.save(user=request.user, recipe=recipe)  
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({
+            'success': True,
+            'message': 'Review added successfully',
+            'review': serializer.data  # Return the review data to the front end
+        }, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({
+        'success': False,
+        'message': 'Review submission failed',
+        'errors': serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 # GET REVIEWS FOR A SPECIFIC RECIPE (API)
 @api_view(['GET'])

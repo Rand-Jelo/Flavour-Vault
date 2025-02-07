@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // LOGIN FUNCTIONALITY
     const loginForm = document.getElementById("loginForm");
     if (loginForm) {
-        loginForm.addEventListener("submit", async function(event) {
+        loginForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const email = document.getElementById("email").value;
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // SIGNUP FUNCTIONALITY 
     const signupForm = document.getElementById("signupForm");
     if (signupForm) {
-        signupForm.addEventListener("submit", async function(event) {
+        signupForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const email = document.getElementById("email").value;
@@ -168,4 +168,50 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("form").addEventListener("submit", function (event) {
         updateIngredientJSON();
     });
+
+    // ADD REVIEW AND REFRESH PAGE AFTER SUBMISSION
+    const reviewForm = document.querySelector("#reviewForm");
+
+    if (reviewForm) {
+        reviewForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const rating = form.querySelector("input[name='rating']").value;
+            const content = form.querySelector("textarea[name='content']").value;
+            const recipeId = form.querySelector("input[name='recipe_id']").value;
+
+            // Create a payload with the rating and content
+            const payload = {
+                rating: rating,
+                content: content,
+            };
+
+            // Perform AJAX call to the backend API
+            fetch(`/recipes/${recipeId}/add_review/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': form.querySelector('[name="csrfmiddlewaretoken"]').value
+                },
+                body: JSON.stringify(payload) // Send the review data in JSON format
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Successfully added the review
+                        alert('Review added successfully!');
+                        // Refresh the page to show the newly added review
+                        window.location.reload(); 
+                    } else {
+                        // Display the error message from the backend
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your review.');
+                });
+        });
+    }
 });
