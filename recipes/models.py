@@ -5,14 +5,6 @@ from decimal import Decimal
 
 User = get_user_model()
 
-# Food category for recipes
-class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    cuisine_type = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"{self.name} - {self.cuisine_type}"
-
 # Recipe model to store all recipes
 class Recipe(models.Model):
     title = models.CharField(max_length=255)
@@ -20,35 +12,29 @@ class Recipe(models.Model):
     instructions = models.TextField()
     image = models.ImageField(upload_to='recipe_images/', null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    models.CharField(max_length=100)
     difficulty = models.CharField(
         max_length=10, choices=[("Easy", "Easy"), ("Medium", "Medium"), ("Hard", "Hard")]
     )
+    category = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
-# Ingredient model to store ingredients
-class Ingredient(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
-
 # Model for linking recipes with ingredients
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey("Recipe", on_delete=models.CASCADE, related_name="recipe_ingredients")
-    ingredient = models.ForeignKey("Ingredient", on_delete=models.CASCADE)
+    ingredient = models.CharField(max_length=100)  # Changed from ForeignKey to CharField
     quantity = models.DecimalField(
         max_digits=6, decimal_places=2, default=Decimal('0.00'),
-        validators=[MinValueValidator(Decimal('0.01'))]  # Corrected import
+        validators=[MinValueValidator(Decimal('0.01'))]
     )
     unit = models.CharField(max_length=20, default="grams") 
 
     def __str__(self):
-        return f"{self.quantity} {self.unit} of {self.ingredient.name}"
-
+        return f"{self.quantity} {self.unit} of {self.ingredient}"
+    
 # Model for user reviews on recipes
 class Review(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="reviews")

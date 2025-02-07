@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -84,26 +85,50 @@ def get_reviews(request, recipe_id):
     return Response(serializer.data)
 
 # CREATE RECIPE (API-Based)
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@login_required
 def create_recipe(request):
-    """API to create a new recipe."""
-    recipe_form = RecipeForm(request.data)
-    
-    if recipe_form.is_valid():
-        recipe = recipe_form.save(commit=False)
-        recipe.author = request.user
-        recipe.save()
-        
-        return Response({"message": "Recipe created successfully"}, status=status.HTTP_201_CREATED)
-    
-    return Response(recipe_form.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "POST":
+        recipe_form = RecipeForm(request.POST, request.FILES)
+
+        # Extract dynamically added ingredients manually
+        ingredients_json = request.POST.get('ingredients_json')  # JSON string from hidden input
+
+        if recipe_form.is_valid():
+            recipe = recipe_form.save(commit=False)
+            recipe.author = request.user
+            recipe.save()
+
+            # Process ingredient JSON data
+            if ingredients_json:
+                import json
+                ingredients_data = json.loads(ingredients_json)
+
+                for ingredient in ingredients_data:
+                    RecipeIngredient.objects.create(
+                        recipe=recipe,
+                        ingredient=ingredient["name"],
+                        quantity=ingredient["quantity"],
+                        unit=ingredient["unit"]
+                    )
+
+            return redirect('recipes:recipe_detail_page', recipe_id=recipe.id)
+
+    else:
+        recipe_form = RecipeForm()
+
+    return render(request, "create_recipe.html", {
+        'recipe_form': recipe_form,
+    })
 
 # DELETE RECIPE (API-Based)
-@api_view(['DELETE'])
+@api_view(['POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_recipe(request, recipe_id):
     """API to delete a recipe owned by the authenticated user."""
     recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)
     recipe.delete()
-    return Response({"message": "Recipe deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+    # Add success message
+    messages.success(request, "Recipe deleted successfully!")
+    
+    return redirect('recipes:account_page')

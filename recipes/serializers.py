@@ -1,22 +1,13 @@
 from rest_framework import serializers
-from .models import Recipe, RecipeIngredient, Ingredient, Review
-
-
-class IngredientSerializer(serializers.ModelSerializer):
-    """Serializer for Ingredients"""
-    class Meta:
-        model = Ingredient
-        fields = ['id', 'name']
-
+from .models import Recipe, RecipeIngredient, Review
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    """Serializer for Recipe Ingredients (Nested in Recipe)"""
-    ingredient = IngredientSerializer() 
+    """Serializer for Recipe Ingredients (Now Uses Text Input for Ingredient Name)"""
+    ingredient = serializers.CharField()  # Changed from ForeignKey to CharField
 
     class Meta:
         model = RecipeIngredient
-        fields = ['ingredient', 'quantity']
-
+        fields = ['ingredient', 'quantity', 'unit']  # Ensure unit is included
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Serializer for Reviews, ensures users can only post one review per recipe"""
@@ -51,11 +42,16 @@ class ReviewSerializer(serializers.ModelSerializer):
         validated_data['recipe'] = Recipe.objects.get(id=recipe_id)
         return super().create(validated_data)
 
-
 class RecipeSerializer(serializers.ModelSerializer):
-    """Serializer for Recipes with nested ingredients & reviews"""
+    """Serializer for Recipes with text-based category and nested ingredients & reviews"""
     ingredients = RecipeIngredientSerializer(many=True, read_only=True)
-    ingredient_entries = serializers.ListField(write_only=True, required=False)  # Allow writing ingredients
+    ingredient_entries = serializers.ListField(
+        child=serializers.DictField(),
+        write_only=True,
+        required=False
+    )  # Allow writing ingredients
+
+    category = serializers.CharField()  # Changed from ForeignKey to CharField
     reviews = ReviewSerializer(many=True, read_only=True)
     author = serializers.ReadOnlyField(source='author.username')  # Include recipe author
 
@@ -68,15 +64,20 @@ class RecipeSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        """Create a recipe with ingredients"""
+        """Create a recipe with manually entered category and ingredients"""
         ingredient_entries = validated_data.pop('ingredient_entries', [])
+        category = validated_data.pop('category', '').strip()  # Ensure category is saved as text
 
         # Create the recipe
-        recipe = Recipe.objects.create(**validated_data)
+        recipe = Recipe.objects.create(**validated_data, category=category)
 
         # Add ingredients
         for entry in ingredient_entries:
-            ingredient = Ingredient.objects.get_or_create(name=entry['name'])[0]
-            RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=entry['quantity'])
+            RecipeIngredient.objects.create(
+                recipe=recipe,
+                ingredient=entry['ingredient'],  # Now stored as text
+                quantity=entry['quantity'],
+                unit=entry['unit']
+            )
 
         return recipe
