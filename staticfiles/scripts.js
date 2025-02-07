@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ingredientContainer = document.getElementById("ingredient-container");
     const ingredientsJsonInput = document.getElementById("ingredients_json");
 
+    // Function to add a new ingredient row
     function addIngredientRow(name = "", quantity = "", unit = "") {
         const newIngredientGroup = document.createElement("div");
         newIngredientGroup.classList.add("ingredient-group", "d-flex", "gap-2", "align-items-center", "mb-2");
@@ -121,16 +122,17 @@ document.addEventListener("DOMContentLoaded", function () {
         ingredientContainer.appendChild(newIngredientGroup);
     }
 
+    // Add click event to the "Add Ingredient" button
     if (addIngredientBtn && ingredientContainer) {
         addIngredientBtn.addEventListener("click", function () {
             addIngredientRow();
         });
 
-        // EVENT DELEGATION: Remove ingredient when clicking on "X"
+        // Event delegation for removing ingredients
         ingredientContainer.addEventListener("click", function (event) {
-            if (event.target.classList.contains("remove-ingredient") || event.target.closest(".remove-ingredient")) {
+            if (event.target.classList.contains("remove-ingredient")) {
                 event.target.closest(".ingredient-group").remove();
-                updateIngredientJSON();
+                updateIngredientJSON();  // Update the hidden ingredients JSON field
             }
         });
     }
@@ -141,11 +143,14 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const existingIngredients = JSON.parse(existingIngredientsElement.textContent);
             existingIngredients.forEach(ingredient => {
-                addIngredientRow(ingredient.ingredient, ingredient.quantity, ingredient.unit);
+                addIngredientRow(ingredient.name, ingredient.quantity, ingredient.unit);
             });
         } catch (error) {
             console.error("Error parsing existing ingredients JSON:", error);
         }
+    } else {
+        // For new recipes, start with one empty ingredient row
+        addIngredientRow();
     }
 
     // UPDATE INGREDIENTS JSON FIELD
