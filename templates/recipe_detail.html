@@ -40,6 +40,9 @@
     <div class="container mt-5">
         <h1 class="text-primary text-center">{{ recipe.title }}</h1>
 
+        <!-- Author Info (small text) -->
+        <p class="text-center text-muted" style="font-size: 0.9rem;">Created by: <strong>{{ recipe.author.username }}</strong></p>
+
         <div class="row mt-4">
             <div class="col-md-6">
                 {% if recipe.image %}
