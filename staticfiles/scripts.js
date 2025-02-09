@@ -111,13 +111,12 @@ document.addEventListener("DOMContentLoaded", function () {
         newIngredientGroup.classList.add("ingredient-group", "d-flex", "gap-2", "align-items-center", "mb-2");
 
         newIngredientGroup.innerHTML = `
-            <input type="text" name="ingredient_name[]" class="form-control" value="${name}" placeholder="Ingredient Name">
-            <input type="number" name="ingredient_quantity[]" class="form-control" value="${quantity}" placeholder="Quantity">
-            <input type="text" name="ingredient_unit[]" class="form-control" value="${unit}" placeholder="Unit">
-            <button type="button" class="btn btn-danger remove-ingredient">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        `;
+        <input type="text" name="ingredient_name[]" class="form-control" value="${name}" placeholder="Ingredient Name" required >
+        <input type="number" name="ingredient_quantity[]" class="form-control" value="${quantity}" placeholder="Quantity" required>
+        <input type="text" name="ingredient_unit[]" class="form-control" value="${unit}" placeholder="Unit" required>
+        <i class="fa-solid fa-circle-xmark text-danger remove-ingredient"
+            style="cursor: pointer; font-size: 1.3rem; margin-left: auto;"></i>
+    `;
 
         ingredientContainer.appendChild(newIngredientGroup);
     }
@@ -183,18 +182,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (reviewForm) {
             reviewForm.addEventListener("submit", function (event) {
                 event.preventDefault();
-    
+
                 const form = event.target;
                 const rating = form.querySelector("input[name='rating']").value;
                 const content = form.querySelector("textarea[name='content']").value;
                 const recipeId = form.querySelector("input[name='recipe_id']").value;
-    
+
                 // Create a payload with the rating and content
                 const payload = {
                     rating: rating,
                     content: content,
                 };
-    
+
                 // Perform AJAX call to the backend API
                 fetch(`/recipes/${recipeId}/add_review/`, {
                     method: 'POST',
@@ -210,18 +209,18 @@ document.addEventListener("DOMContentLoaded", function () {
                             // Successfully added the review
                             const successMessage = "Your review has been submitted successfully!";
                             const messageContainer = document.querySelector("#message-container");
-                            
+
                             // Remove any previous messages
                             messageContainer.innerHTML = '';
-    
+
                             // Display the success message dynamically
                             const successDiv = document.createElement("div");
                             successDiv.classList.add('alert', 'alert-success', 'mt-3');
                             successDiv.textContent = successMessage;
                             messageContainer.appendChild(successDiv);
-    
+
                             // Optionally hide the review form
-                            form.style.display = 'none'; 
+                            form.style.display = 'none';
                         } else {
                             // Display the error message from the backend
                             alert('Error: ' + data.message);

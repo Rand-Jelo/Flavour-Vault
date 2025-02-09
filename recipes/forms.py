@@ -10,7 +10,7 @@ class RecipeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter recipe description'}),
             'instructions': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter instructions'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'category': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category'}), 
+            'category': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category (e.g., Dessert)'}), 
             'difficulty': forms.Select(choices=[
                 ('Easy', 'Easy'),
                 ('Medium', 'Medium'),

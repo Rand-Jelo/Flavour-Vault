@@ -1,0 +1,59 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f7fa;
+}
+
+.content {
+    flex: 1;
+    margin-bottom: 80px;
+}
+
+h1,
+h3 {
+    font-weight: 700;
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.btn-primary,
+.btn-warning,
+.btn-danger {
+    font-weight: 600;
+}
+
+footer {
+    margin-top: auto;
+    background-color: #343a40;
+    padding: 20px;
+    color: #fff;
+}
+
+footer a {
+    color: #fff;
+    margin: 0 10px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.modal-footer button {
+    font-weight: bold;
+}
+
+
