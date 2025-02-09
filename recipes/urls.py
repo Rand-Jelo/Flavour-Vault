@@ -5,7 +5,7 @@ app_name = 'recipes'
 
 urlpatterns = [
     # Home page route
-    path('', views.home_page, name='home'),  # The home page is now handled here
+    path('', views.home_page, name='home'), 
 
     # Other recipe-related routes
     path('recipes/', views.recipes_page, name='recipes_page'),

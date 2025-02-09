@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .models import Recipe, RecipeIngredient, Review
-from .forms import RecipeForm, RecipeIngredientForm
+from .forms import RecipeForm, ReviewForm
 from .serializers import RecipeSerializer, ReviewSerializer
 import json
 
@@ -23,14 +24,24 @@ def recipes_page(request):
 
 # RECIPE DETAIL PAGE VIEW
 def recipe_detail_page(request, recipe_id):
+    # Get the recipe details
     recipe = get_object_or_404(Recipe, id=recipe_id)
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)  # Fetch linked ingredients
     reviews = recipe.reviews.all()
 
+    # Initialize the duplicate_reviews flag
+    duplicate_reviews = False
+
+    # Check if the user is authenticated and has already posted a review for this recipe
+    if request.user.is_authenticated and reviews.filter(user=request.user).exists():
+        duplicate_reviews = True
+
+    # Pass the flag to the template
     return render(request, "recipe_detail.html", {
         "recipe": recipe,
         "ingredients": ingredients,
-        "reviews": reviews
+        "reviews": reviews,
+        "duplicate_reviews": duplicate_reviews  # Pass the flag to the template
     })
 
 # ACCOUNT PAGE VIEW
@@ -69,26 +80,32 @@ def recipe_detail(request, id):
     return Response(serializer.data)
 
 # ADD A REVIEW (API - Requires Authentication)
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def add_review(request, recipe_id):
-    """Handles adding a review to a recipe"""
     recipe = get_object_or_404(Recipe, id=recipe_id)
+    
+    # Check if the user already has a review for this recipe
+    existing_review = Review.objects.filter(user=request.user, recipe=recipe).first()
+    
+    if request.method == 'POST':
+        if existing_review:
+            # If the user has already posted a review, display an error message and return without saving
+            messages.error(request, 'You have already submitted a review for this recipe.')
+            return redirect(f"/recipes/{recipe.id}/")  # Redirect to prevent duplicate message
 
-    serializer = ReviewSerializer(data=request.data, context={'request': request, 'recipe_id': recipe_id})
-    if serializer.is_valid():
-        serializer.save(user=request.user, recipe=recipe)  
-        return Response({
-            'success': True,
-            'message': 'Review added successfully',
-            'review': serializer.data  # Return the review data to the front end
-        }, status=status.HTTP_201_CREATED)
+        else:
+            # If no existing review, proceed to save the new one
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.recipe = recipe
+                review.user = request.user
+                review.save()
+                messages.success(request, 'Your review has been submitted successfully!')
+                return redirect(f"/recipes/{recipe.id}/")  # Redirect to recipe detail page
+    else:
+        form = ReviewForm()
 
-    return Response({
-        'success': False,
-        'message': 'Review submission failed',
-        'errors': serializer.errors
-    }, status=status.HTTP_400_BAD_REQUEST)
+    return render(request, 'recipe_detail.html', {'recipe': recipe, 'form': form})
 
 # GET REVIEWS FOR A SPECIFIC RECIPE (API)
 @api_view(['GET'])

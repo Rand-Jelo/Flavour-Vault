@@ -178,45 +178,60 @@ document.addEventListener("DOMContentLoaded", function () {
     const reviewForm = document.querySelector("#reviewForm");
 
     if (reviewForm) {
-        reviewForm.addEventListener("submit", function (event) {
-            event.preventDefault();
+        const reviewForm = document.querySelector("#reviewForm");
 
-            const form = event.target;
-            const rating = form.querySelector("input[name='rating']").value;
-            const content = form.querySelector("textarea[name='content']").value;
-            const recipeId = form.querySelector("input[name='recipe_id']").value;
-
-            // Create a payload with the rating and content
-            const payload = {
-                rating: rating,
-                content: content,
-            };
-
-            // Perform AJAX call to the backend API
-            fetch(`/recipes/${recipeId}/add_review/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': form.querySelector('[name="csrfmiddlewaretoken"]').value
-                },
-                body: JSON.stringify(payload) // Send the review data in JSON format
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Successfully added the review
-                        alert('Review added successfully!');
-                        // Refresh the page to show the newly added review
-                        window.location.reload(); 
-                    } else {
-                        // Display the error message from the backend
-                        alert('Error: ' + data.message);
-                    }
+        if (reviewForm) {
+            reviewForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+    
+                const form = event.target;
+                const rating = form.querySelector("input[name='rating']").value;
+                const content = form.querySelector("textarea[name='content']").value;
+                const recipeId = form.querySelector("input[name='recipe_id']").value;
+    
+                // Create a payload with the rating and content
+                const payload = {
+                    rating: rating,
+                    content: content,
+                };
+    
+                // Perform AJAX call to the backend API
+                fetch(`/recipes/${recipeId}/add_review/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': form.querySelector('[name="csrfmiddlewaretoken"]').value
+                    },
+                    body: JSON.stringify(payload) // Send the review data in JSON format
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('There was an error submitting your review.');
-                });
-        });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Successfully added the review
+                            const successMessage = "Your review has been submitted successfully!";
+                            const messageContainer = document.querySelector("#message-container");
+                            
+                            // Remove any previous messages
+                            messageContainer.innerHTML = '';
+    
+                            // Display the success message dynamically
+                            const successDiv = document.createElement("div");
+                            successDiv.classList.add('alert', 'alert-success', 'mt-3');
+                            successDiv.textContent = successMessage;
+                            messageContainer.appendChild(successDiv);
+    
+                            // Optionally hide the review form
+                            form.style.display = 'none'; 
+                        } else {
+                            // Display the error message from the backend
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('There was an error submitting your review.');
+                    });
+            });
+        }
     }
 });
