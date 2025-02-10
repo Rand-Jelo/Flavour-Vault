@@ -24,6 +24,7 @@
                     {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'recipes:home' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'recipes:recipes_page' %}">View Recipes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'recipes:create_recipe' %}">Create Recipes</a>
                     <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                     {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'recipes:home' %}">Home</a></li>
