@@ -392,3 +392,66 @@ When users click on the logut button in the navbar they get redirected to the lo
 
 For testing please the [Testing](/TESTING.md) documentation.
 <br><br>
+
+## Deployment
+
+### Deployment to Heroku
+
+To deploy to Heroku:
+1. In GitPod CLI, the root directory of the project, run:
+    pip3 freeze --local > requirements.txt
+    to create a requirements.txt file containing project dependencies.
+2. In the Gitpod project workspace root directory, create a new file called Procfile, with capital 'P'.
+    Open the Procfile. Inside the file, check that web: python3 app.py has been added when creating the file
+    Save the file.
+3. Push the 2 new files to the GitHub repository
+4. Login to Heroku, select Create new app, add the name for your app and choose your closest region.
+5. Navigate to the Deploy tab on Heroku dashboard and select Github, search for your repository and click 'connect'.
+6. Navigate to the settings tab, click reveal config vars and input the following:
+
+| Key               | Value                                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------------- |
+| **DATABASE_URL**   | Your PostgreSQL database URL                         
+| **SECRET_KEY**     | Your Secret key                                                                                   |
+| **CLOUDINARY_URL** | Your Cloudinary URL                                                                              |
+
+7. Deploy the app by selecting **Deploy Branch** under the **Deploy** tab.
+
+### Forking the GitHub Repository
+<br>
+
+By forking the **FlavourVault** GitHub repository, you make a personal copy of the repository to explore and make changes without affecting the original repository. To fork the repository:
+
+1. Log in to GitHub and go to the [FlavourVault Repository](https://github.com/rand-Jelo/Flavour-Vault).
+2. At the top of the repository page, just above the "Settings" button, click the **Fork** button.
+3. You should now have your own copy of the repository in your GitHub account.
+<br><br>
+
+### Making a Local Clone
+<br>
+
+To clone the repository locally, follow these steps:
+
+1. Log in to GitHub and go to the [FlavourVault Repository](https://github.com/rand-Jelo/Flavour-Vault).
+2. Under the repository name, click the **Clone or download** button.
+3. To clone the repository using HTTPS, under "Clone with HTTPS", copy the link.
+4. Open Git Bash
+5. Change the current working directory to the location where you want the cloned directory to be made.
+6. Type `git clone`, and then paste the URL you copied in Step 3.
+
+```
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+```
+7. Press Enter. Your local clone will be created.
+<br><br>
+
+### Version Control
+
+We use **Git** and **GitHub** for version control. Git helps us track the history of the project and collaborate with others. It enables us to manage different versions of the code and helps us to roll back changes when necessary.
+
+- **git add**: Stage the changes for commit.
+- **git commit**: Commit the staged changes with a message describing them.
+- **git push**: Push the changes to the remote GitHub repository.
+
+Once your changes are committed, you can push them to GitHub to make them available to collaborators and for deployment.
+<br><br>
