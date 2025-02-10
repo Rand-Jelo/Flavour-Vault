@@ -329,3 +329,61 @@ When users click on the logut button in the navbar they get redirected to the lo
 | **Account Page** | Create and view user’s personal recipes                     | View all recipes posted by the user                            | Edit recipe details and ingredients                      | Delete personal recipes                                     |
 | **Create Recipe Page** | Create a new recipe with ingredients, image, and details | View the form to input recipe information                       | Update recipe details and ingredients                     |                                                             |
 | **Edit Recipe Page** | Update existing recipe with new ingredients and details   | View the current recipe to edit its details                    | Modify the recipe's ingredients, instructions, and image  |     
+
+# Technologies
+
+## Languages
+
+* HTML5 - Used for structuring and organizing content.
+* Bootstrap - Utilized for styling and responsive design.
+* JavaScript - Handles frontend interactivity, initializes Bootstrap components, and processes functions that interact with the backend data.
+* Python - Manages the backend functionality.
+    * asgiref==3.8.1
+    * certifi==2025.1.31
+    * cffi==1.17.1
+    * charset-normalizer==3.4.1
+    * cloudinary==1.36.0
+    * crispy-bootstrap5==2024.10
+    * cryptography==44.0.0
+    * dj-database-url==2.3.0
+    * dj-rest-auth==7.0.1
+    * dj3-cloudinary-storage==0.0.6
+    * Django==5.1.5
+    * django-allauth==65.4.0
+    * django-cloudinary-storage==0.3.0
+    * django-crispy-forms==2.3
+    * djangorestframework==3.15.2
+    * djangorestframework_simplejwt==5.4.0
+    * gunicorn==20.1.0
+    * idna==3.10
+    * pillow==11.1.0
+    * psycopg2-binary==2.9.10
+    * pycparser==2.22
+    * PyJWT==2.10.1
+    * python-decouple==3.8
+    * requests==2.32.3
+    * setuptools==75.8.0
+    * six==1.17.0
+    * sqlparse==0.5.3
+    * typing_extensions==4.12.2
+    * urllib3==1.26.20
+    * whitenoise==6.8.2
+<br><br>
+
+## Tools
+
+* **Cloudinary** - Used for image and media storage and management.
+* **Heroku** - Used for deployment of the application.
+* **PostgreSQL** - Used for the database management.
+* **Git/GitHub** - Used for version control and storage.
+* **Django** - The web framework used for building the backend of the application.
+* **Django REST Framework** - Used for building the API and handling requests.
+* **FontAwesome** - Used for icons in the application, including buttons and navigation.
+* **Cloudinary Storage** - Integrated to handle media uploads and static file storage.
+* **Whitenoise** - Used for serving static files in production (with Heroku).
+* **Google Dev Tools** - Used for troubleshooting during development.
+* **Draw.io** - Used for designing the database schema.
+* **miro** - Used for wireframe designs.
+* **Requests Library** - Used for making HTTP requests in the backend.
+* **Pillow** - Used for image processing in Django.
+* **Am I Responsive** - Used to create responsive mockup for readme.
