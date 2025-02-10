@@ -455,3 +455,30 @@ We use **Git** and **GitHub** for version control. Git helps us track the histor
 
 Once your changes are committed, you can push them to GitHub to make them available to collaborators and for deployment.
 <br><br>
+
+# **Credits**
+
+## **Code**
+- Recipe submission, editing, and CRUD functionality implemented using [Django](https://www.djangoproject.com/) and [Django REST Framework](https://www.django-rest-framework.org/).
+- Image upload and storage handled via [Cloudinary](https://cloudinary.com/) integration.
+- Authentication and user management built using [Django Allauth](https://django-allauth.readthedocs.io/en/latest/) and [Django Rest Auth](https://dj-rest-auth.readthedocs.io/en/latest/).
+- PostgreSQL database schema designed with [Draw.io](https://app.diagrams.net/).
+- Database interactions optimized using [Django ORM](https://docs.djangoproject.com/en/stable/topics/db/queries/).
+- Search and filtering logic adapted from [Django documentation](https://docs.djangoproject.com/en/stable/topics/db/search/).
+
+## **Media**
+- Icons sourced from [Font Awesome](https://fontawesome.com/).
+- Responsive mockups created using [Am I Responsive](https://ui.dev/amiresponsive).
+- UI wireframes designed using [Miro](https://miro.com/).
+- Images sourced from [Freepik](https://www.freepik.com/).
+
+## **Tutorials and Resources**
+- Django authentication setup guidance from [Django Allauth official documentation](https://django-allauth.readthedocs.io/en/latest/installation.html).
+- API request handling in Django REST Framework based on [DRF official documentation](https://www.django-rest-framework.org/tutorial/quickstart/).
+- PostgreSQL integration and environment setup references from [Heroku documentation](https://devcenter.heroku.com/categories/heroku-postgres).
+- Frontend styling approaches adapted from [Bootstrap documentation](https://getbootstrap.com/docs/).
+
+## **Acknowledgements**
+- A big thank you to my mentor, **Mitko Bachvarov**, for his continuous guidance and feedback throughout the project.
+- Special thanks to the [Stack Overflow](https://stackoverflow.com/) community for providing solutions to technical challenges.
+- Appreciation to the **Open Source contributors** behind Django, DRF, and PostgreSQL for their valuable frameworks.
