@@ -9,6 +9,33 @@ FlavourVault is a platform where users can share and discover recipes. This appl
 <img src="static/readme-img/am-i-responsive.png">
 <br><br>
 
+# Contents
+
+* [User Experience](#user-experience)
+    * [Owner Goals](#owner-goals)
+    * [Visitor Goals](#visitor-goals)
+* [Design](#design)
+    * [Wireframes](#wireframes)
+    * [Database Schema](#database-schema)
+    * [Images](#images)
+* [Features](#features)
+    * [Multi-page Features](#multi-page-features)
+    * [All User Features](#all-user-features)
+    * [Logged-In Features](#logged-in-features)
+    * [CRUD Functionality](#crud-functionality)
+* [Technologies](#technologies)
+    * [Languages](#languages)
+    * [Tools](#tools)
+* [Testing](#testing)
+* [Deployment](#deployment)
+    * [Deployment to Heroku](#deployment-to-heroku)
+    * [Forking Repository](#forking-the-github-repository)
+    * [Making a Local Clone](#making-a-local-clone)
+    * [Version Control](#version-control)
+* [Credits](#credits)
+
+<br><br>
+
 # User Experience
 
 FlavourVault is designed to allow users to share their recipes and browse others. It also gives users the ability to search for recipes based on tags, categories, and specific ingredients.
