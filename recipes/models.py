@@ -50,17 +50,3 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.recipe.title} ({self.rating})"
-
-# Model for user favorite recipes
-class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'recipe'], name='unique_favorite')
-        ]
-
-    def __str__(self):
-        return f"{self.user.username} saved {self.recipe.title}"
