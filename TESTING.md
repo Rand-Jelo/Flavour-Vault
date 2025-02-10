@@ -4,6 +4,21 @@
 # Testing documentation for FlavourVault Web application.
 <br><br>
 
+# Contents
+
+* [Validation](#validation)
+    * [HTML Validation](#html-validation)
+    * [JavaScript Validation](#javascript-validation)
+    * [CI Python Linter](#ci-python-linter)
+    * [Lighthouse](#lighthouse)
+* [User Story Testing](#user-story-testing)
+    * [General](#general)
+    * [Logged Out](#logged-out)
+    * [Logged In User](#logged-in-user)
+    * [Admin](#admin)
+* [Manual Testing](#manual-testing)
+
+<br><br>
 # Validation
 
 ## HTML Validation
