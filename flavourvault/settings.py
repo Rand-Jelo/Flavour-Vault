@@ -33,12 +33,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*', '.herokuapp.com', 'https://ui.dev/amiresponsive']
+ALLOWED_HOSTS = ['*', '.herokuapp.com']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-randjelo-flavourvault-60crf5myf7p.ws.codeinstitute-ide.net',
-    'https://flavourvault.herokuapp.com',
-    'https://ui.dev/amiresponsive'
+    'https://flavourvault.herokuapp.com'
 ]
 
 
