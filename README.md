@@ -8,3 +8,20 @@ FlavourVault is a platform where users can share and discover recipes. This appl
 
 <img src="static/readme-img/am-i-responsive.png">
 <br><br>
+
+# User Experience
+
+FlavourVault is designed to allow users to share their recipes and browse others. It also gives users the ability to search for recipes based on tags, categories, and specific ingredients.
+
+## Owner Goals
+- Provide a platform for users to easily share and browse recipes.
+- Allow users to upload photos of their dishes.
+
+
+## Visitor Goals
+As a visitor:
+- I want to view a variety of recipes from other users.
+- I want to be able to create an account and submit my own recipes.
+- I want to be able to search for recipes based on tags or categories.
+
+<br><br>
