@@ -89,7 +89,7 @@
                 {% for recipe_ingredient in recipe.recipe_ingredients.all %}
                 <div class="ingredient-group d-flex gap-2 align-items-center mb-2">
                     <input type="text" name="ingredient_name[]" class="form-control" value="{{ recipe_ingredient.ingredient }}" placeholder="Ingredient Name" required>
-                    <input type="number" name="ingredient_quantity[]" class="form-control" value="{{ recipe_ingredient.quantity }}" placeholder="Quantity" required>
+                    <input type="number" name="ingredient_quantity[]" class="form-control" value="{{ recipe_ingredient.quantity }}" placeholder="Quantity" step="0.01" required>
                     <input type="text" name="ingredient_unit[]" class="form-control" value="{{ recipe_ingredient.unit }}" placeholder="Unit" required>
                     <i class="fa-solid fa-circle-xmark text-danger remove-ingredient"
                         style="cursor: pointer; font-size: 1.3rem; margin-left: auto;"></i>
