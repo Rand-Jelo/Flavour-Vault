@@ -227,3 +227,11 @@ def edit_recipe(request, recipe_id):
         "form": form,
         "ingredients": ingredients
     })
+
+# DELETE REVIEW
+def delete_review(request, review_id):
+    # Make sure the user can only delete their own reviews
+    review = get_object_or_404(Review, id=review_id)
+    if request.user == review.user:
+        review.delete()
+    return redirect('recipes:recipe_detail_page', recipe_id=review.recipe.id)

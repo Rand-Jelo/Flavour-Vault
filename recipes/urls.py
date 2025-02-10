@@ -17,4 +17,7 @@ urlpatterns = [
 
     # Add Review route
     path('recipes/<int:recipe_id>/add_review/', views.add_review, name='add_review'),
+    # Delete Review route
+    path('review/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+
 ]
