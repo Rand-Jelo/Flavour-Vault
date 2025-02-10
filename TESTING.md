@@ -56,3 +56,14 @@ All pages pass HTML Validation at [W3C markup validation service](https://valida
 <img src="static/testing-img/logout-html-validation.png">
 </details>
 <br><br>
+
+## JavaScript Validation
+
+Custom JavaScript file run through [JShint](https://jshint.com/) for validation
+
+<details>
+<summary>JavaScript Validation</summary>
+<br>
+<img src="static/testing-img/javascript-validation.png">
+</details>
+<br><br>
