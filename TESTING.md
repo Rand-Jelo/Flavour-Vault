@@ -93,3 +93,104 @@ All python files run through CI PEP8 Linter
 <img src="static/testing-img/forms-validation.png">
 </details>
 <br><br>
+
+
+## Lighthouse
+
+### Desktop
+
+<details>
+<summary>Home page</summary>
+<br>
+<img src="static/testing-img/home-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Recipes page</summary>
+<br>
+<img src="static/testing-img/recipes-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Recipe detail page</summary>
+<br>
+<img src="static/testing-img/recipe-detail-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Log in page</summary>
+<br>
+<img src="static/testing-img/login-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Sign up page</summary>
+<br>
+<img src="static/testing-img/signup-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Account page</summary>
+<br>
+<img src="static/testing-img/account-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Create recipe page</summary>
+<br>
+<img src="static/testing-img/create-recipe-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Edit recipe page</summary>
+<br>
+<img src="static/testing-img/edit-recipe-lighthouse-desktop.png">
+</details>
+<details>
+<summary>Log out page</summary>
+<br>
+<img src="static/testing-img/logout-lighthouse-desktop.png">
+</details>
+<br><br>
+
+### Mobile
+
+<details>
+<summary>Home page</summary>
+<br>
+<img src="static/testing-img/home-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Recipes page</summary>
+<br>
+<img src="static/testing-img/recipes-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Recipe detail page</summary>
+<br>
+<img src="static/testing-img/recipe-detail-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Log in page</summary>
+<br>
+<img src="static/testing-img/login-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Sign up page</summary>
+<br>
+<img src="static/testing-img/signup-lighthouse-mobile.png">>
+</details>
+<details>
+<summary>Account page</summary>
+<br>
+<img src="static/testing-img/account-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Create recipe page</summary>
+<br>
+<img src="static/testing-img/create-recipe-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Edit recipe page</summary>
+<br>
+<img src="static/testing-img/edit-recipe-lighthouse-mobile.png">
+</details>
+<details>
+<summary>Log out page</summary>
+<br>
+<img src="static/testing-img/logout-lighthouse-mobile.png">
+</details>
+<br><br>
