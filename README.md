@@ -387,3 +387,8 @@ When users click on the logut button in the navbar they get redirected to the lo
 * **Requests Library** - Used for making HTTP requests in the backend.
 * **Pillow** - Used for image processing in Django.
 * **Am I Responsive** - Used to create responsive mockup for readme.
+
+# Testing
+
+For testing please the [Testing](/TESTING.md) documentation.
+<br><br>
