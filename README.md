@@ -133,3 +133,199 @@ Schema for PostgreSQL database was created on [Draw.io](https://app.diagrams.net
 <img src="static/readme-img/db-schema.png">
 </details>
 <br><br>
+
+# Features
+
+## Multi-page Features
+
+### Navbar
+
+The navbar is displayed on all pages except for login, signup, and create recipe. On mobile devices, it collapses into a hamburger icon that opens as a side navigation menu. The visible links depend on whether the user is logged in or not.
+
+<details>
+<summary>Navbar home Logged Out</summary>
+<br>
+<img src="static/readme-img/navbar-home-loggedout.png">
+</details>
+<details>
+<summary>Navbar home Logged In</summary>
+<br>
+<img src="static/readme-img/navbar-home-loggedin.png">
+</details>
+<details>
+<summary>Navbar recipes Logged out</summary>
+<br>
+<img src="static/readme-img/navbar-recipes-loggedout.png">
+</details>
+<details>
+<summary>Navbar recipes Logged In</summary>
+<br>
+<img src="static/readme-img/navbar-recipes-loggedin.png">
+</details>
+<details>
+<summary>Navbar recipe detail Logged Out</summary>
+<br>
+<img src="static/readme-img/navbar-recipe-detail-loggedout.png">
+</details><details>
+<summary>Navbar recipe detail Logged In</summary>
+<br>
+<img src="static/readme-img/navbar-recipe-detail-loggedin.png">
+</details>
+<details>
+<summary>Navbar Account</summary>
+<br>
+<img src="static/readme-img/navbar-account.png">
+</details><details>
+<summary>Navbar Create Recipe</summary>
+<br>
+<img src="static/readme-img/navbar-create-recipe.png">
+</details>
+<details>
+<summary>Navbar Edit Recipe</summary>
+<br>
+<img src="static/readme-img/navbar-edit-recipe.png">
+</details><details>
+<summary>Navbar Logout</summary>
+<br>
+<img src="static/readme-img/navbar-logout.png">
+</details>
+
+### Footer
+
+Footer is present in all pages, with a disclaimer and links to GitHub profile, Instagram and facebook.
+
+<details>
+<summary>Footer</summary></summary>
+<br>
+<img src="static/readme-img/footer.png">
+</details>
+<br><br>
+
+## All User Features
+
+## Home Page
+
+The home page is available to all users here users can view the top 6 best recipes.
+
+<details>
+<summary>Home Page</summary></summary>
+<br>
+<img src="static/readme-img/home-page.png">
+</details>
+<br><br>
+
+### Log In Page
+
+The login page is rendered, verifying the user’s existence in the database and validating the password. If the user is not registered, a prompt at the bottom provides a link to the singup page.
+
+<details>
+<summary>Log In</summary></summary>
+<br>
+<img src="static/readme-img/login-page.png">
+</details>
+<br><br>
+
+### Sign Up Page
+
+The signup page is rendered to register the user for the site, checks if user is already in database, if not adds them to database. If the user is registered, a prompt at the bottom provides a link to the login page.
+
+<details>
+<summary>Sign Up</summary></summary>
+<br>
+<img src="static/readme-img/signup-page.png">
+</details>
+<br><br>
+
+### Recipe Detail Page
+
+The recipe detail page is where users can the individual recipes. In the page the users can see the author, ingredients, desctription, instructions, image and reviews.
+
+<details>
+<summary>Recipe detal page</summary></summary>
+<br>
+<img src="static/readme-img/recipe-detail-page.png">
+</details>
+<br><br>
+
+### Recipe Page
+
+The recipe page is where users can see all the avaliable recipes and who created them, they can also see the date that the recipe was created on.
+
+<details>
+<summary>Recipe page</summary></summary>
+<br>
+<img src="static/readme-img/recipe-page.png">
+</details>
+<br><br>
+
+## Logged In Features
+
+These features/pages available to users who are logged in 
+
+### Account Page
+
+This is the page that the user can see, edit, create and delete recipes. They can also view their reviews.
+
+<details>
+<summary>Account page</summary></summary>
+<br>
+<img src="static/readme-img/account-page.png">
+</details>
+<br><br>
+
+### Create Recipe Page
+
+This is the page that the user can create a new recipe. Users can add title, description, instructions, catagory, image and multiple ingredients
+
+<details>
+<summary>Create recipe page</summary></summary>
+<br>
+<img src="static/readme-img/create-recipe-page.png">
+</details>
+<br><br>
+
+### Edit Recipe Page
+
+This is the page that the user edit their posted recipe, users can edit everything that is avalible in the create recipe page
+
+<details>
+<summary>Edit recipe page</summary></summary>
+<br>
+<img src="static/readme-img/edit-recipe-page.png">
+</details>
+<br><br>
+
+### Add review
+
+In the recipe detail page users can add a review and a comment on other recipes. Users can ad 1-5 stars
+
+<details>
+<summary>Recipe Detail Page</summary></summary>
+<br>
+<img src="static/readme-img/add-review.png">
+</details>
+<br><br>
+
+### Log Out Page
+
+When users click on the logut button in the navbar they get redirected to the log out page
+
+<details>
+<summary>Log out Page</summary></summary>
+<br>
+<img src="static/readme-img/logout-page.png">
+</details>
+<br><br>
+
+## CRUD Functionality
+
+| Page            | Create                                                       | Read                                                           | Update                                                  | Delete                                                       |
+|-----------------|--------------------------------------------------------------|----------------------------------------------------------------|---------------------------------------------------------|-------------------------------------------------------------|
+| **Login**       |                                                              | Read username and password for authentication                 |                                                              |                                                             |
+| **Register**    | Create a new user account                                    | Read username to check if the user already exists               |                                                            |                                                             |
+| **Home Page**   |                                                              | View featured recipes and display details                      |                                                         |                                                             |
+| **Recipe Page** | Create a new recipe with ingredients and images               | Read individual recipe details, including ingredients and instructions | Edit recipe details, including ingredients and image      | Delete recipe from the database                             |
+| **Recipe Detail** |                                                              | View full details of the recipe, including ingredients and reviews | Edit recipe details                                     |                                                             |
+| **Account Page** | Create and view user’s personal recipes                     | View all recipes posted by the user                            | Edit recipe details and ingredients                      | Delete personal recipes                                     |
+| **Create Recipe Page** | Create a new recipe with ingredients, image, and details | View the form to input recipe information                       | Update recipe details and ingredients                     |                                                             |
+| **Edit Recipe Page** | Update existing recipe with new ingredients and details   | View the current recipe to edit its details                    | Modify the recipe's ingredients, instructions, and image  |     
