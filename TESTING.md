@@ -67,3 +67,29 @@ Custom JavaScript file run through [JShint](https://jshint.com/) for validation
 <img src="static/testing-img/javascript-validation.png">
 </details>
 <br><br>
+
+## CI Python Linter
+
+All python files run through CI PEP8 Linter
+
+<details>
+<summary>Models.py</summary>
+<br>
+<img src="static/testing-img/models-validation.png">
+</details>
+<details>
+<summary>views.py</summary>
+<br>
+<img src="static/testing-img/views-validation.png">
+</details>
+<details>
+<summary>serializers.py</summary>
+<br>
+<img src="static/testing-img/serializers-validation.png">
+</details>
+<details>
+<summary>forms.py</summary>
+<br>
+<img src="static/testing-img/forms-validation.png">
+</details>
+<br><br>
